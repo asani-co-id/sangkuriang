@@ -28,5 +28,5 @@ func Suling(db *sql.DB, r *http.Request, id int) {
 	if err != nil {
 		panic(err.Error())
 	}
-	go insForm.Exec(r.URL.Path, logMainRequest, id, logMainWhen)
+	insForm.Exec(r.URL.Path, logMainRequest, id, logMainWhen)
 }
