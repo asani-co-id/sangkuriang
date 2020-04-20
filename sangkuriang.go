@@ -4,10 +4,13 @@ import (
 	"bytes"
 	"database/sql"
 	"net/http"
+	"sync"
 
 	"github.com/tidwall/gjson"
 	"github.com/uniplaces/carbon"
 )
+
+var mutex sync.RWMutex
 
 func GetBodyJson(r *http.Request) string {
 	buf := new(bytes.Buffer)
@@ -21,6 +24,7 @@ func GetBodyJson(r *http.Request) string {
 }
 
 func Suling(db *sql.DB, r *http.Request, id int) {
+	mutex.Lock()
 	times, _ := carbon.NowInLocation("Asia/Jakarta")
 	logMainWhen := times.DateTimeString()
 	logMainRequest := GetBodyJson(r)
@@ -29,4 +33,5 @@ func Suling(db *sql.DB, r *http.Request, id int) {
 		panic(err.Error())
 	}
 	insForm.Exec(r.URL.Path, logMainRequest, id, logMainWhen)
+	mutex.Unlock()
 }
