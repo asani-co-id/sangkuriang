@@ -20,7 +20,7 @@ func GetBodyJson(r *http.Request) string {
 	}
 }
 
-func Suling(db *sql.DB, r *http.Request, id int) {
+func suling(db *sql.DB, r *http.Request, id int) {
 	times, _ := carbon.NowInLocation("Asia/Jakarta")
 	logMainWhen := times.DateTimeString()
 	logMainRequest := GetBodyJson(r)
