@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"database/sql"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 
@@ -23,11 +22,8 @@ func GetBodyJson(r *http.Request) string {
 }
 
 func Suling(db *sql.DB, r *http.Request, id int) {
-	b := bytes.NewBuffer(make([]byte, 0))
-	io.TeeReader(r.Body, b)
-	defer r.Body.Close()
-	r.Body = ioutil.NopCloser(b)
-	fmt.Println(b.String)
+	b, _ := ioutil.ReadAll(r.Body)
+	fmt.Println(string(b))
 	// times, _ := carbon.NowInLocation("Asia/Jakarta")
 	// logMainWhen := times.DateTimeString()
 	// insForm, err := db.Prepare("INSERT INTO log_rental (log_rental_url, log_rental_who, log_rental_when) VALUES (?, ?, ?)")
