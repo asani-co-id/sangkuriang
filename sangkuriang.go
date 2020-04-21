@@ -3,12 +3,12 @@ package sangkuriang
 import (
 	"bytes"
 	"database/sql"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/tidwall/gjson"
+	"github.com/uniplaces/carbon"
 )
 
 func GetBody(r *http.Request) string {
@@ -27,12 +27,12 @@ func GetBody(r *http.Request) string {
 }
 
 func Suling(db *sql.DB, r *http.Request, id int) {
-	fmt.Println(GetBody(r))
-	// times, _ := carbon.NowInLocation("Asia/Jakarta")
-	// logMainWhen := times.DateTimeString()
-	// insForm, err := db.Prepare("INSERT INTO log_rental (log_rental_url, log_rental_who, log_rental_when) VALUES (?, ?, ?)")
-	// if err != nil {
-	// 	panic(err.Error())
-	// }
-	// go insForm.Exec(r.URL.Path, id, logMainWhen)
+	times, _ := carbon.NowInLocation("Asia/Jakarta")
+	logMainWhen := times.DateTimeString()
+	request := GetBody(r)
+	insForm, err := db.Prepare("INSERT INTO log_rental (log_rental_url, log_rental_request, log_rental_who, log_rental_when) VALUES (?, ?, ?, ?)")
+	if err != nil {
+		panic(err.Error())
+	}
+	go insForm.Exec(r.URL.Path, request, id, logMainWhen)
 }
